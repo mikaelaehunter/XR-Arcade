@@ -18,43 +18,62 @@ pinMode(right, INPUT_PULLUP);
 pinMode(esc, INPUT_PULLUP);
 pinMode(space, INPUT_PULLUP);
 pinMode(menu, INPUT_PULLUP);
+Keyboard.begin();
 
 }
 
 void loop() {
 
+  upArrow();
+  downArrow();
+  leftArrow();
+  rightArrow();
+  escapeKey();
+  spaceBar();
+  menuKey();
+
+}
+
+void upArrow(){
   if (digitalRead(up) == LOW)                     //Checking if the first switch has been pressed
   {
     Keyboard.press(KEY_UP_ARROW);
-    //delay(100);  // Hold the key for a short duration
     Keyboard.release(KEY_UP_ARROW);
-    //delay(100);  // Debounce delay
   }
+}
 
-  if (digitalRead(down) == LOW)                     //Checking if the second switch has been pressed
+void downArrow(){
+  if (digitalRead(down) == LOW)                     //Checking if the first switch has been pressed
   {
     Keyboard.press(KEY_DOWN_ARROW);
-    //delay(100);  // Hold the key for a short duration
+    //delay(100);
     Keyboard.release(KEY_DOWN_ARROW);
-    //delay(100);  // Debounce delay
+    //delay(100);
   }
+  // if (digitalRead(down) == LOW) {                    //Checking if the second switch has been pressed{
+  //   Keyboard.press(KEY_DOWN_ARROW);
+  // } else {
+  //   Keyboard.release(KEY_DOWN_ARROW);
+  // }
+}
 
+void leftArrow(){
   if (digitalRead(left) == LOW)                     //Checking if the third switch has been pressed
   {
     Keyboard.press(KEY_LEFT_ARROW);
-    //delay(100);  // Hold the key for a short duration
     Keyboard.release(KEY_LEFT_ARROW);
-    //delay(100);  // Debounce delay
   }
+}
 
+void rightArrow(){
   if (digitalRead(right) == LOW)                     //Checking if the fourth switch has been pressed
   {
     Keyboard.press(KEY_RIGHT_ARROW);
-    //delay(100);  // Hold the key for a short duration
     Keyboard.release(KEY_RIGHT_ARROW);
-    //delay(100);  // Debounce delay
   }
+}
 
+void escapeKey(){
   if (digitalRead(esc) == LOW)                     //Checking if the fifth switch has been pressed
   {
     Keyboard.press(KEY_ESC);
@@ -62,23 +81,29 @@ void loop() {
     Keyboard.release(KEY_ESC);
     delay(100);  // Debounce delay                                    //Sending a string and a return
   }
+}
 
-  if (digitalRead(space) == LOW)
+void spaceBar(){
+  if (digitalRead(space) == LOW)                     //Checking if the first switch has been pressed
   {
     Keyboard.press(' ');
-    //delay(100);  // Hold the key for a short duration
+    //delay(100);
     Keyboard.release(' ');
-    //delay(100);  // Debounce delay
+    //delay(100);
   }
+  // if (digitalRead(space) == LOW) {
+  //   Keyboard.press(' ');
+  // } else {
+  //   Keyboard.release(' ');
+  // }
+}
 
-  if (digitalRead(menu) == LOW)
+void menuKey(){
+  if (digitalRead(esc) == LOW)                     //Checking if the fifth switch has been pressed
   {
-    Keyboard.press(KEY_MENU);
+    Keyboard.press(KEY_ESC);
     delay(100);  // Hold the key for a short duration
-    Keyboard.release(KEY_MENU);
-    delay(100);  // Debounce delay
+    Keyboard.release(KEY_ESC);
+    delay(100);  // Debounce delay                                    //Sending a string and a return
   }
-  
-  delay(10); //debounce delay
-
 }
