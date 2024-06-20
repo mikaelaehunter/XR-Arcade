@@ -26,33 +26,33 @@ void loop() {
   if (digitalRead(up) == LOW)                     //Checking if the first switch has been pressed
   {
     Keyboard.press(KEY_UP_ARROW);
-    delay(100);  // Hold the key for a short duration
+    //delay(100);  // Hold the key for a short duration
     Keyboard.release(KEY_UP_ARROW);
-    delay(100);  // Debounce delay
+    //delay(100);  // Debounce delay
   }
 
   if (digitalRead(down) == LOW)                     //Checking if the second switch has been pressed
   {
     Keyboard.press(KEY_DOWN_ARROW);
-    delay(100);  // Hold the key for a short duration
+    //delay(100);  // Hold the key for a short duration
     Keyboard.release(KEY_DOWN_ARROW);
-    delay(100);  // Debounce delay
+    //delay(100);  // Debounce delay
   }
 
   if (digitalRead(left) == LOW)                     //Checking if the third switch has been pressed
   {
     Keyboard.press(KEY_LEFT_ARROW);
-    delay(100);  // Hold the key for a short duration
+    //delay(100);  // Hold the key for a short duration
     Keyboard.release(KEY_LEFT_ARROW);
-    delay(100);  // Debounce delay
+    //delay(100);  // Debounce delay
   }
 
   if (digitalRead(right) == LOW)                     //Checking if the fourth switch has been pressed
   {
     Keyboard.press(KEY_RIGHT_ARROW);
-    delay(100);  // Hold the key for a short duration
+    //delay(100);  // Hold the key for a short duration
     Keyboard.release(KEY_RIGHT_ARROW);
-    delay(100);  // Debounce delay
+    //delay(100);  // Debounce delay
   }
 
   if (digitalRead(esc) == LOW)                     //Checking if the fifth switch has been pressed
@@ -66,9 +66,9 @@ void loop() {
   if (digitalRead(space) == LOW)
   {
     Keyboard.press(' ');
-    delay(100);  // Hold the key for a short duration
+    //delay(100);  // Hold the key for a short duration
     Keyboard.release(' ');
-    delay(100);  // Debounce delay
+    //delay(100);  // Debounce delay
   }
 
   if (digitalRead(menu) == LOW)
