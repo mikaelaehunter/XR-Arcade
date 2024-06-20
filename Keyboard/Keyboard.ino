@@ -9,6 +9,24 @@ int esc = 6;
 int space = 7;
 int menu = 8;
 
+int buttonStateUp = 0;
+int buttonStateDown = 0;
+int buttonStateLeft = 0;
+int buttonStateRight = 0;
+int buttonStateEsc = 0;
+int buttonStateSpace = 0;
+int buttonStateMenu = 0;
+
+unsigned long lastDebounceTimeUp = 0;
+unsigned long lastDebounceTimeDown = 0;
+unsigned long lastDebounceTimeLeft = 0;
+unsigned long lastDebounceTimeRight = 0;
+unsigned long lastDebounceTimeEsc = 0;
+unsigned long lastDebounceTimeSpace = 0;
+unsigned long lastDebounceTimeMenu = 0;
+
+unsigned long debounceDelay = 50; //debounce time in milliseconds
+
 void setup() {
 
 pinMode(up, INPUT_PULLUP);                        //Setting up the internal pull-ups resistors
@@ -18,7 +36,6 @@ pinMode(right, INPUT_PULLUP);
 pinMode(esc, INPUT_PULLUP);
 pinMode(space, INPUT_PULLUP);
 pinMode(menu, INPUT_PULLUP);
-Keyboard.begin();
 
 }
 
@@ -35,75 +52,120 @@ void loop() {
 }
 
 void upArrow(){
-  if (digitalRead(up) == LOW)                     //Checking if the first switch has been pressed
-  {
-    Keyboard.press(KEY_UP_ARROW);
-    Keyboard.release(KEY_UP_ARROW);
+  int reading = digitalRead(up);
+
+  if (reading != buttonStateUp){
+    lastDebounceTimeUp = millis();
   }
-}
+
+  if ((millis() - lastDebounceTimeUp) > debounceDelay){
+    if (reading == LOW){
+      Keyboard.press(KEY_UP_ARROW);
+    } else {
+        Keyboard.release(KEY_UP_ARROW);
+      }
+    }
+    buttonStateUp = reading;
+  }
 
 void downArrow(){
-  if (digitalRead(down) == LOW)                     //Checking if the first switch has been pressed
-  {
-    Keyboard.press(KEY_DOWN_ARROW);
-    //delay(100);
-    Keyboard.release(KEY_DOWN_ARROW);
-    //delay(100);
+  int reading = digitalRead(down);
+
+  if (reading != buttonStateDown){
+    lastDebounceTimeDown = millis();
   }
-  // if (digitalRead(down) == LOW) {                    //Checking if the second switch has been pressed{
-  //   Keyboard.press(KEY_DOWN_ARROW);
-  // } else {
-  //   Keyboard.release(KEY_DOWN_ARROW);
-  // }
+
+  if ((millis() - lastDebounceTimeDown) > debounceDelay){
+    if (reading == LOW){
+      Keyboard.press(KEY_DOWN_ARROW);
+    } else {
+        Keyboard.release(KEY_DOWN_ARROW);
+      }
+    }
+    buttonStateDown = reading;
 }
 
 void leftArrow(){
-  if (digitalRead(left) == LOW)                     //Checking if the third switch has been pressed
-  {
-    Keyboard.press(KEY_LEFT_ARROW);
-    Keyboard.release(KEY_LEFT_ARROW);
+  int reading = digitalRead(left);
+
+  if (reading != buttonStateLeft){
+    lastDebounceTimeLeft = millis();
   }
+
+  if ((millis() - lastDebounceTimeLeft) > debounceDelay){
+    if (reading == LOW){
+      Keyboard.press(KEY_LEFT_ARROW);
+    } else {
+        Keyboard.release(KEY_LEFT_ARROW);
+      }
+    }
+    buttonStateLeft = reading;
 }
 
 void rightArrow(){
-  if (digitalRead(right) == LOW)                     //Checking if the fourth switch has been pressed
-  {
-    Keyboard.press(KEY_RIGHT_ARROW);
-    Keyboard.release(KEY_RIGHT_ARROW);
+  int reading = digitalRead(right);
+
+  if (reading != buttonStateRight){
+    lastDebounceTimeRight = millis();
   }
+
+  if ((millis() - lastDebounceTimeRight) > debounceDelay){
+    if (reading == LOW){
+      Keyboard.press(KEY_RIGHT_ARROW);
+    } else {
+        Keyboard.release(KEY_RIGHT_ARROW);
+      }
+    }
+    buttonStateRight = reading;
 }
 
 void escapeKey(){
-  if (digitalRead(esc) == LOW)                     //Checking if the fifth switch has been pressed
-  {
-    Keyboard.press(KEY_ESC);
-    delay(100);  // Hold the key for a short duration
-    Keyboard.release(KEY_ESC);
-    delay(100);  // Debounce delay                                    //Sending a string and a return
+  int reading = digitalRead(esc);
+
+  if (reading != buttonStateEsc){
+    lastDebounceTimeEsc = millis();
   }
+
+  if ((millis() - lastDebounceTimeEsc) > debounceDelay){
+    if (reading == LOW){
+      Keyboard.press(KEY_ESC);
+    } else {
+        Keyboard.release(KEY_ESC);
+      }
+    }
+    buttonStateEsc = reading;
 }
 
 void spaceBar(){
-  if (digitalRead(space) == LOW)                     //Checking if the first switch has been pressed
-  {
-    Keyboard.press(' ');
-    //delay(100);
-    Keyboard.release(' ');
-    //delay(100);
+  int reading = digitalRead(space);
+
+  if (reading != buttonStateSpace){
+    lastDebounceTimeSpace = millis();
   }
-  // if (digitalRead(space) == LOW) {
-  //   Keyboard.press(' ');
-  // } else {
-  //   Keyboard.release(' ');
-  // }
+
+  if ((millis() - lastDebounceTimeSpace) > debounceDelay){
+    if (reading == LOW){
+      Keyboard.press(' ');
+    } else {
+        Keyboard.release(' ');
+      }
+    }
+    buttonStateSpace = reading;
 }
 
 void menuKey(){
-  if (digitalRead(esc) == LOW)                     //Checking if the fifth switch has been pressed
-  {
-    Keyboard.press(KEY_ESC);
-    delay(100);  // Hold the key for a short duration
-    Keyboard.release(KEY_ESC);
-    delay(100);  // Debounce delay                                    //Sending a string and a return
+  int reading = digitalRead(menu);
+
+  if (reading != buttonStateMenu){
+    lastDebounceTimeMenu = millis();
   }
+
+  if ((millis() - lastDebounceTimeMenu) > debounceDelay){
+    if (reading == LOW){
+      Keyboard.press(KEY_MENU);
+    } else {
+        Keyboard.release(KEY_MENU);
+      }
+    }
+    buttonStateMenu = reading; 
 }
