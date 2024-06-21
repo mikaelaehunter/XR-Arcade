@@ -10,6 +10,17 @@ const int esc = 6;
 const int space = 7;
 const int menu = 8;
 
+//declaring joystick pins
+const int xPin = A0;  // Analog output of horizontal joystick pin
+const int yPin = A1;  // Analog output of vertical joystick pin
+
+//declaring joystick variables
+int yZero, xZero;  // Stores the initial value of each axis, usually around 512
+int yValue, xValue;  // Stores current analog output of each axis
+const int sensitivity = 100;  // Higher sensitivity value = slower mouse, should be <= about 500
+int mouseClickFlag = 0;
+int invertMouse = 1; //Value to invert joystick based on orientation
+
 // Variable to store the previous state of the button
 bool previousButtonStateUp = HIGH;
 bool previousButtonStateDown = HIGH;
@@ -20,7 +31,7 @@ bool previousButtonStateSpace = HIGH;
 bool previousButtonStateMenu = HIGH;
 
 void setup() {
-
+  //buttons
   pinMode(up, INPUT_PULLUP);                        //Setting up the internal pull-ups resistors
   pinMode(down, INPUT_PULLUP);                        //and also setting the pins to inputs.
   pinMode(left, INPUT_PULLUP);
@@ -30,6 +41,12 @@ void setup() {
   pinMode(menu, INPUT_PULLUP);
   Keyboard.begin();
 
+  //joystick
+  pinMode(xPin, INPUT);  // Set both analog pins as inputs
+  pinMode(yPin, INPUT);
+  delay(1000);  // short delay to let outputs settle
+  yZero = analogRead(yPin);  // get the initial values
+  xZero = analogRead(xPin);  // Joystick should be in neutral position when reading these
 }
 
 void loop() {
@@ -41,6 +58,7 @@ void loop() {
   edgeDetection(esc, previousButtonStateEsc, KEY_ESC);
   edgeDetection(space, previousButtonStateSpace, ' ');
   edgeDetection(menu, previousButtonStateMenu, KEY_MENU);
+  joystick();
 
 }
 
@@ -53,4 +71,14 @@ void edgeDetection(int buttonPin, bool &previousButtonState, uint8_t key){
     Keyboard.release(key); // Button release detected
   }
   previousButtonState = currentButtonState;
+}
+
+void joystick(){
+  yValue = analogRead(yPin) - yZero;  // read vertical offset
+  xValue = analogRead(xPin) - xZero;  // read horizontal offset
+
+  if (yValue != 0)
+    Mouse.move(0, (invertMouse * (yValue / sensitivity)), 0); // move mouse on y axis
+  if (xValue != 0)
+    Mouse.move((invertMouse * (xValue / sensitivity)), 0, 0); // move mouse on x axis
 }
