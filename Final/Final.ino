@@ -8,7 +8,7 @@ const int left = 4;
 const int right = 5;
 const int esc = 6;
 const int space = 7;
-const int menu = 8;
+const int click = 8;
 
 //declaring joystick pins
 const int xPin = A0;  // Analog output of horizontal joystick pin
@@ -17,9 +17,12 @@ const int yPin = A1;  // Analog output of vertical joystick pin
 //declaring joystick variables
 int yZero, xZero;  // Stores the initial value of each axis, usually around 512
 int yValue, xValue;  // Stores current analog output of each axis
-const int sensitivity = 100;  // Higher sensitivity value = slower mouse, should be <= about 500
+const int sensitivity = 50;  // Higher sensitivity value = slower mouse, should be <= about 500
 int mouseClickFlag = 0;
 int invertMouse = 1; //Value to invert joystick based on orientation
+
+//click
+int buttonState = 0;
 
 // Variable to store the previous state of the button
 bool previousButtonStateUp = HIGH;
@@ -38,8 +41,9 @@ void setup() {
   pinMode(right, INPUT_PULLUP);
   pinMode(esc, INPUT_PULLUP);
   pinMode(space, INPUT_PULLUP);
-  pinMode(menu, INPUT_PULLUP);
+  pinMode(click, INPUT_PULLUP);
   Keyboard.begin();
+  Mouse.begin();
 
   //joystick
   pinMode(xPin, INPUT);  // Set both analog pins as inputs
@@ -57,7 +61,7 @@ void loop() {
   edgeDetection(right, previousButtonStateRight, KEY_RIGHT_ARROW);
   edgeDetection(esc, previousButtonStateEsc, KEY_ESC);
   edgeDetection(space, previousButtonStateSpace, ' ');
-  edgeDetection(menu, previousButtonStateMenu, KEY_MENU);
+  mouseClick();
   joystick();
 
 }
@@ -71,6 +75,17 @@ void edgeDetection(int buttonPin, bool &previousButtonState, uint8_t key){
     Keyboard.release(key); // Button release detected
   }
   previousButtonState = currentButtonState;
+}
+
+void mouseClick(){
+  
+  buttonState = digitalRead(click);         // read the state of the pushbutton value:
+  
+  // if it is, the buttonState is LOW:
+  if (buttonState == LOW) {                     // check if the pushbutton is pressed.
+    Mouse.click();                              // if the button is pressed, click the mouse:
+    delay(200);                                // add a delay to prevent multiple clicks for one press
+  }
 }
 
 void joystick(){
