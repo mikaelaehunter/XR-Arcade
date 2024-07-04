@@ -8,7 +8,7 @@ const int left = 4;
 const int right = 5;
 const int esc = 6;
 const int space = 7;
-const int click = 8;
+const int enter = 8;
 
 //declaring joystick pins
 const int xPin = A0;  // Analog output of horizontal joystick pin
@@ -32,6 +32,7 @@ bool previousButtonStateRight = HIGH;
 bool previousButtonStateEsc = HIGH;
 bool previousButtonStateSpace = HIGH;
 bool previousButtonStateMenu = HIGH;
+bool previousButtonStateReturn = HIGH;
 
 void setup() {
   //buttons
@@ -41,7 +42,7 @@ void setup() {
   pinMode(right, INPUT_PULLUP);
   pinMode(esc, INPUT_PULLUP);
   pinMode(space, INPUT_PULLUP);
-  pinMode(click, INPUT_PULLUP);
+  pinMode(enter, INPUT_PULLUP);
   Keyboard.begin();
   Mouse.begin();
 
@@ -61,7 +62,7 @@ void loop() {
   edgeDetection(right, previousButtonStateRight, KEY_RIGHT_ARROW);
   edgeDetection(esc, previousButtonStateEsc, KEY_ESC);
   edgeDetection(space, previousButtonStateSpace, ' ');
-  mouseClick();
+  edgeDetection(enter, previousButtonStateReturn, KEY_RETURN);
   joystick();
 
 }
@@ -75,17 +76,6 @@ void edgeDetection(int buttonPin, bool &previousButtonState, uint8_t key){
     Keyboard.release(key); // Button release detected
   }
   previousButtonState = currentButtonState;
-}
-
-void mouseClick(){
-  
-  buttonState = digitalRead(click);         // read the state of the pushbutton value:
-  
-  // if it is, the buttonState is LOW:
-  if (buttonState == LOW) {                     // check if the pushbutton is pressed.
-    Mouse.click();                              // if the button is pressed, click the mouse:
-    delay(200);                                // add a delay to prevent multiple clicks for one press
-  }
 }
 
 void joystick(){
