@@ -26,133 +26,41 @@ public class Idle : MonoBehaviour
     public Button game4Button;
     public Button game5Button;
     public Button game6Button;
-    public GameObject[] gamePages; // Assign the game detail pages GameObjects here
-    private Button[] buttons;
-    private Color originalColor;
-    private Color highlightedColor = new Color(1.0f, 0.75f, 0.8f); // Light pink color
-    private Button currentlyHighlightedButton;
-    private GameObject currentPage;
-    private Button lastHighlightedButton; // Store the last highlighted button
-
-    private int columns = 3; // Number of columns in the button grid
-
-    // Start is called before the first frame update
-    void Start()
+    public Button aboutPageNextButton;
+{
+    if (currentPage == aboutPage)
     {
-        //code relating to the idle screen saver
-        timeDif = maxTimeDif;
-
-        //code relating to the button highlighting
-        buttons = buttonPage.GetComponentsInChildren<Button>();// Initialize button array
-
-        // Store the original color of the buttons (assuming all buttons have the same color)
-        if (buttons.Length > 0)
+        if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            originalColor = buttons[0].GetComponent<Image>().color;
+            HighlightButton(aboutPageNextButton); // Highlight the right arrow button
         }
-
-        aboutPage.SetActive(true); //aboutPage is active initially
-        buttonPage.SetActive(false); //buttonPage is inactive initially
-
-        // Initially hide all game detail pages
-        foreach (GameObject page in gamePages)
+        else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            page.SetActive(false);
+            UnhighlightButton(aboutPageNextButton); // Unhighlight the right arrow button
         }
-
-        currentPage = aboutPage; // Start with aboutPage
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        Vector3 mouseDelta = Input.mousePosition - lastMouseCoordinate;
-
-        timeDif -= Time.deltaTime;
-        if (timeDif <= 0)
+        else if ((Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) &&
+                 currentlyHighlightedButton == aboutPageNextButton)
         {
-            buffer = "";
-        }
-
-        if (Input.anyKey || (mouseDelta.x > 0 || mouseDelta.y > 0))
-        {
-            AddToBuffer("a");
-        }
-
-        lastMouseCoordinate = Input.mousePosition;
-
-        CheckBuffer();
-
-        HandlePageNavigation();
-    }
-
-    void AddToBuffer(string c)
-    {
-        timeDif = maxTimeDif;
-        buffer += c;
-    }
-
-    void CheckBuffer()
-    {
-        if (buffer.Length < 1) // If the buffer is empty
-        {
-            ActivateScreenSaver();
-        }
-        else // If the buffer is not empty/is filling with "a"
-        {
-            DeactivateScreenSaver();
+            SwitchToButtonPage(); // Move to buttonPage if rightArrowButton is highlighted
         }
     }
-
-    void ActivateScreenSaver() // When the buffer is empty
+    else if (currentPage == buttonPage)
     {
-        screenSaver.SetActive(true); // Idle screen saver is active
-        screenUI.SetActive(false); // Canvas is inactive
-        wasScreenSaverActive = true; // Flag idle screen saver was active
-        Debug.Log("The buffer is empty.");
-    }
+        HandleButtonNavigation();
 
-    void DeactivateScreenSaver() // When the buffer is full of "a"
-    {
-        if (screenSaver.activeSelf)
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
-            screenSaver.SetActive(false); // Screen saver is inactive
-            screenUI.SetActive(true); // Canvas is active
-            if (wasScreenSaverActive) // If idle screen saver was active
-            {
-                SwitchToAboutPage(); // Reset to aboutPage only if the screensaver was active
-                isFirstNavigationAfterScreenSaver = true; // Set the flag to true
-            }
-            wasScreenSaverActive = false; // Reset flag so idle screen saver is inactive
+            OpenGameDetails();
         }
     }
-
-    void HandlePageNavigation() // Handle page navigation
+    else
     {
-        if (currentPage == aboutPage) // If we are on the aboutPage
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            if (Input.GetKeyDown(KeyCode.RightArrow)) // Check for right arrow key
-            {
-                SwitchToButtonPage(); // To switch to the buttonPage
-            }
-        }
-        else if (currentPage == buttonPage) // If we are on the buttonPage
-        {
-            HandleButtonNavigation(); // Handle button navigation when buttonPage is active
-
-            if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) // If enter or return are clicked
-            {
-                OpenGameDetails(); // Launch menu pages
-            }
-        }
-        else // When on a game menu page
-        {
-            if (Input.GetKeyDown(KeyCode.LeftArrow)) // Press left arrow
-            {
-                SwitchToButtonPage(); // To go back to button page
-            }
+            SwitchToButtonPage();
         }
     }
+}
 
     private void SwitchToButtonPage() // Switch from current page to buttonPage
     {
@@ -195,6 +103,16 @@ public class Idle : MonoBehaviour
             EventSystem.current.SetSelectedGameObject(buttonToHighlight.gameObject);
         }
     }
+
+    private void UnhighlightButton(Button buttonToUnhighlight)
+{
+    if (buttonToUnhighlight == currentlyHighlightedButton)
+    {
+        buttonToUnhighlight.GetComponent<Image>().color = originalColor;
+        currentlyHighlightedButton = null;
+        EventSystem.current.SetSelectedGameObject(null);
+    }
+}
 
     private void HandleButtonNavigation()
     {
