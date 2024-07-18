@@ -13,7 +13,8 @@ public class Idle : MonoBehaviour
     [SerializeField] private GameObject screenSaver;
     [SerializeField] private GameObject screenUI;
     [SerializeField] private GameObject aboutPage;
-    [SerializeField] private GameObject buttonPage;
+    [SerializeField] private GameObject buttonPage1;
+    [SerializeField] private GameObject buttonPage2;
     private Vector3 lastMouseCoordinate = Vector3.zero;
     private bool wasScreenSaverActive = false;
     private bool isFirstNavigationAfterScreenSaver = false; // Flag to track first navigation after screen saver
@@ -28,6 +29,7 @@ public class Idle : MonoBehaviour
     public Button game6Button;
     public Button aboutPageNextButton;
     public Button buttonPageBackButton;
+    public Button buttonPageDownButton;
     public GameObject[] gamePages; // Assign the game detail pages GameObjects here
     private Button[] buttons1;
     private Button[] buttons2;
@@ -46,17 +48,18 @@ public class Idle : MonoBehaviour
         timeDif = maxTimeDif;
 
         //code relating to the button highlighting
-        buttons1 = buttonPage.GetComponentsInChildren<Button>();// Initialize button array
+        buttons1 = buttonPage1.GetComponentsInChildren<Button>();// Initialize button array
+        buttons2 = buttonPage2.GetComponentsInChildren<Button>();
 
         // Store the original color of the buttons (assuming all buttons have the same color)
         if (buttons1.Length > 0)
         {
             originalColor = buttons1[0].GetComponent<Image>().color;
-
         }
 
         aboutPage.SetActive(true); //aboutPage is active initially
-        buttonPage.SetActive(false); //buttonPage is inactive initially
+        buttonPage1.SetActive(false); //buttonPage is inactive initially
+
 
         // Initially hide all game detail pages
         foreach (GameObject page in gamePages)
@@ -146,10 +149,10 @@ public class Idle : MonoBehaviour
         else if ((Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) &&
                  currentlyHighlightedButton == aboutPageNextButton)
         {
-            SwitchToButtonPage(); // Move to buttonPage if rightArrowButton is highlighted
+            SwitchToButtonPage1(); // Move to buttonPage if rightArrowButton is highlighted
         }
     }
-    else if (currentPage == buttonPage)
+    else if (currentPage == buttonPage1)
     {
         HandleButtonNavigation();
 
@@ -162,15 +165,15 @@ public class Idle : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            SwitchToButtonPage();
+            SwitchToButtonPage1();
         }
     }
 }
 
-    private void SwitchToButtonPage() // Switch from current page to buttonPage
+    private void SwitchToButtonPage1() // Switch from current page to buttonPage
     {
         currentPage.SetActive(false); // The current page that was not button page is inactive
-        buttonPage.SetActive(true); // Button page is active
+        buttonPage1.SetActive(true); // Button page is active
    
         // Highlight the appropriate button on the buttonPage
         if (isFirstNavigationAfterScreenSaver)
@@ -187,8 +190,23 @@ public class Idle : MonoBehaviour
             HighlightButton(firstButton); // Default to highlighting the first button
         }
 
-        currentPage = buttonPage;
+        currentPage = buttonPage1;
     }
+
+    private void SwitchToButtonPage2()
+{
+    // Store the currently highlighted button before switching pages
+    lastHighlightedButton = currentlyHighlightedButton;
+
+    // Switch from buttonPage1 to buttonPage2
+    buttonPage1.SetActive(false);
+    buttonPage2.SetActive(true);
+    currentPage = buttonPage2;
+
+    // Highlight the first button on the new page (e.g., game7Button)
+    HighlightButton(buttonPage2.GetComponentsInChildren<Button>()[0]);
+
+}
 
     private void HighlightButton(Button buttonToHighlight)
     {
@@ -298,6 +316,10 @@ public class Idle : MonoBehaviour
         {
             HighlightButton(game3Button);
         }
+        else if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            HighlightButton(buttonPageDownButton);
+        }
     }
     else if (currentlyHighlightedButton == buttonPageBackButton)
     {
@@ -307,9 +329,18 @@ public class Idle : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            HighlightButton(game1Button);
-
-
+             HighlightButton(game1Button);
+        }
+    }
+    else if (currentlyHighlightedButton == buttonPageDownButton)
+    {
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            HighlightButton(game6Button);
+        }
+        else if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            SwitchToButtonPage2();
         }
     }
 }
@@ -349,7 +380,9 @@ public class Idle : MonoBehaviour
         lastHighlightedButton = currentlyHighlightedButton;
 
         // Switch from buttonPage to respective game detail page
-        buttonPage.SetActive(false);
+        buttonPage1.SetActive(false);
+
+
         gamePages[pageIndex].SetActive(true);
         currentPage = gamePages[pageIndex];
     }
