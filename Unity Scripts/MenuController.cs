@@ -37,20 +37,6 @@ public class MenuController : MonoBehaviour
         }
     }
 
-    public void ShowScreenSaver()
-    {
-        screenSaver.SetActive(true);
-        aboutMenu.SetActive(false);
-        buttonMenu1.SetActive(false);
-        buttonMenu2.SetActive(false);
-        game1Menu.SetActive(false);
-        game2Menu.SetActive(false);
-        game3Menu.SetActive(false);
-        game4Menu.SetActive(false);
-        game5Menu.SetActive(false);
-        game6Menu.SetActive(false);
-    }
-
     public void ShowAboutMenu()
     {
         screenSaver.SetActive(false);
